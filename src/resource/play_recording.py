@@ -21,11 +21,9 @@ print("📡 Transmitting recording...")
 ptt.on()
 time.sleep(0.3)  # Wait for radio to go TX
 
-subprocess.run([
-    "aplay", "-D", DEVICE_OUT,
-    "-r", "8000", "-f", "S16_LE", "-c", "1",
-    filepath
-])
+subprocess.run(
+    ["aplay", "-D", DEVICE_OUT, "-r", "8000", "-f", "S16_LE", "-c", "1", filepath]
+)
 
 ptt.off()
 print("✅ Done playing.")

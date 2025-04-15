@@ -10,7 +10,7 @@ DEVICE_OUT = "plughw:2,0"
 PTT_PIN = 17  # GPIO pin number (BCM)
 SAVE_PATH = "./wav"
 SILENCE_THRESHOLD = "5%"  # Lower = more sensitive
-MAX_SILENCE = "2.0"         # Stop after this much silence
+MAX_SILENCE = "2.0"  # Stop after this much silence
 
 # Setup
 os.makedirs(SAVE_PATH, exist_ok=True)
@@ -27,26 +27,52 @@ try:
 
         print("🟡 Listening for voice...")
 
-        subprocess.run([
-            "sox", "-t", "alsa", DEVICE_IN,
-            "-r", "8000", "-c", "1", "-e", "signed", "-b", "16",
-            filepath,
-            "silence", "1", "0.1", SILENCE_THRESHOLD,
-                       "1", MAX_SILENCE, SILENCE_THRESHOLD
-        ])
+        subprocess.run(
+            [
+                "sox",
+                "-t",
+                "alsa",
+                DEVICE_IN,
+                "-r",
+                "8000",
+                "-c",
+                "1",
+                "-e",
+                "signed",
+                "-b",
+                "16",
+                filepath,
+                "silence",
+                "1",
+                "0.1",
+                SILENCE_THRESHOLD,
+                "1",
+                MAX_SILENCE,
+                SILENCE_THRESHOLD,
+            ]
+        )
 
         if os.path.exists(filepath) and os.path.getsize(filepath) > 1000:
             print(f"🎤 Detected voice — saved: {filename}")
-            
+
             print("📡 Transmitting...")
             ptt.on()
             time.sleep(0.3)  # Give HT time to enter TX mode
 
-            subprocess.run([
-                "aplay", "-D", DEVICE_OUT,
-                "-r", "8000", "-f", "S16_LE", "-c", "1",
-                filepath
-            ])
+            subprocess.run(
+                [
+                    "aplay",
+                    "-D",
+                    DEVICE_OUT,
+                    "-r",
+                    "8000",
+                    "-f",
+                    "S16_LE",
+                    "-c",
+                    "1",
+                    filepath,
+                ]
+            )
 
             ptt.off()
             print("✅ TX done.")

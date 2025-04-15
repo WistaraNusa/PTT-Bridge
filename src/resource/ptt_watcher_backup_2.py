@@ -5,7 +5,7 @@ import os
 DEVICE_IN = "plughw:2,0"
 SAVE_PATH = "./wav"
 SILENCE_THRESHOLD = "10%"  # How loud to trigger (lower = more sensitive)
-MAX_SILENCE = "2.0"         # How long silence before stopping (seconds)
+MAX_SILENCE = "2.0"  # How long silence before stopping (seconds)
 
 os.makedirs(SAVE_PATH, exist_ok=True)
 print(f"🎤 Smart VOX activated! Listening on {DEVICE_IN}")
@@ -18,13 +18,30 @@ try:
 
         print("🟡 Listening for voice...")
 
-        subprocess.run([
-            "sox", "-t", "alsa", DEVICE_IN,
-            "-r", "8000", "-c", "1", "-e", "signed", "-b", "16",
-            filepath,
-            "silence", "1", "0.1", SILENCE_THRESHOLD,
-                       "1", MAX_SILENCE, SILENCE_THRESHOLD
-        ])
+        subprocess.run(
+            [
+                "sox",
+                "-t",
+                "alsa",
+                DEVICE_IN,
+                "-r",
+                "8000",
+                "-c",
+                "1",
+                "-e",
+                "signed",
+                "-b",
+                "16",
+                filepath,
+                "silence",
+                "1",
+                "0.1",
+                SILENCE_THRESHOLD,
+                "1",
+                MAX_SILENCE,
+                SILENCE_THRESHOLD,
+            ]
+        )
 
         if os.path.exists(filepath) and os.path.getsize(filepath) > 1000:
             print(f"🎙️ Sound detected! Saved: {filename}\n")
